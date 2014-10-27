@@ -1,3 +1,5 @@
+<?php require_once 'backend/user_functions.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Coding &lt;span&gt; | REGISTRATION</title>
+    <title>Coding &lt;span&gt; | HOME</title>
 	<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/clean-blog.min.css" rel="stylesheet">
@@ -21,6 +23,7 @@
 </head>
 
 <body>
+
     <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header page-scroll">
@@ -35,12 +38,23 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                	<?php 
+						if ($_SESSION['user']['username'] === 'admin'){
+							echo ('<li><a href="admin/admin_index.php">Admin</a></li>');
+						}
+					?>
                     <li>
-                        <a href="login.php">Login/Sign up</a>
+						<?php
+							if(!isset($_SESSION['user'])) {
+								echo ('<a href="login.php">Login/Sign up</a>');
+							} else {
+								echo ('<a id="logout" href="logout.php">Logout</a>');
+							}
+						?>
                     </li>
                     <li>
-	                    <a href="index.php">Home</a>
-	                </li>
+                        <a href="index.php">Home</a>
+                    </li>
                     <li>
                         <a href="about.php">About me</a>
                     </li>
@@ -60,52 +74,74 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="site-heading">
-                        <h1>Welcome!</h1>
+                        <h1>Coding &lt;span&gt;</h1>
                         <hr class="small">
-                        <span class="subheading">Sign up and get more info!</span>
+                        <span class="subheading">My coding &lt;span&gt; began at LearningFuze</span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-    	<?php
-			require_once 'backend/user_functions.php';
-			
-			if(isset($_POST['user_id']) AND 
-				isset($_POST['user_password']) AND 
-				isset($_POST['user_email']))
-			{
-				$result = add_user($_POST['user_email'], $_POST['user_id'], $_POST['user_password']);
-				if($result === true) {
-					?>
-					<div class="alert alert-success" role="alert">Successfully registered!</div>
-					<?php
-				} else {
-					?>
-					<div class="alert alert-danger" role="alert">ID is already in use!</div>
-					<?php
-				}
-			}
-		?>
 
     <div class="container">
-        <div id="box">
-			<form id="reg_form" method="POST">
-				<label for="username">Username</label>
-				<input class="form-control" type="text" name="user_id" id="username"/><br/>
-				<label for="userpw">Password</label>
-				<input class="form-control" type="password" name="user_password" id="userpw"/><br/>
-				<label for="useremail">Email</label>
-				<input class="form-control" type="text" name="user_email" id="useremail"/><br/>
-				<button class="btn btn-primary" type="submit">REGISTER</button>
-			</form><br/>
-				<button class="btn btn-primary" onclick="location.href = 'login.php'">Already signed up?</button>
-		</div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-preview">
+                    <a href="post.html">
+                        <h2 class="post-title">
+                            Man must explore, and this is exploration at its greatest
+                        </h2>
+                        <h3 class="post-subtitle">
+                            Problems look mighty small from 150 miles up
+                        </h3>
+                    </a>
+                    <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on September 24, 2014</p>
+                </div>
+                <hr>
+                <div class="post-preview">
+                    <a href="post.html">
+                        <h2 class="post-title">
+                            I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.
+                        </h2>
+                    </a>
+                    <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on September 18, 2014</p>
+                </div>
+                <hr>
+                <div class="post-preview">
+                    <a href="post.html">
+                        <h2 class="post-title">
+                            Science has not yet mastered prophecy
+                        </h2>
+                        <h3 class="post-subtitle">
+                            We predict too much for the next year and yet far too little for the next ten.
+                        </h3>
+                    </a>
+                    <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on August 24, 2014</p>
+                </div>
+                <hr>
+                <div class="post-preview">
+                    <a href="post.html">
+                        <h2 class="post-title">
+                            Failure is not an option
+                        </h2>
+                        <h3 class="post-subtitle">
+                            Many say exploration is part of our destiny, but it’s actually our duty to future generations.
+                        </h3>
+                    </a>
+                    <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on July 8, 2014</p>
+                </div>
+                <hr>
+                <ul class="pager">
+                    <li class="next">
+                        <a href="#">Older Posts &rarr;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <hr>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
@@ -141,50 +177,11 @@
             </div>
         </div>
     </footer>
-
+	
     <script src="js/bootstrap.min.js"></script>
 
     <script src="js/clean-blog.js"></script>
-	
-	<script>
-		$(function(){
-			$('#reg_form').submit(function(){
-				var patt_username = /^[a-zA-Z0-9]{6,20}$/;
-				var patt_password = /^[a-zA-Z0-9]{6,12}$/;
-				var patt_password2 = /[A-Z]+/;
-				var patt_password3 = /[0-9]+/;
-				var patt_email = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-z]{2,4}$/;
-				var username = $('#username').val();
-				var password = $('#userpw').val();
-				var email = $('#useremail').val();
-				
-				if (!patt_username.test(username)){
-					alert('Username is invalid!');
-					return false;
-				}
-				
-				if (!patt_password.test(password)){
-					alert('Password requires min 6, max 12 length!');
-					return false;
-				}
-				
-				if (!patt_password2.test(password)){
-					alert('Password requires capitalized letter at least once!');
-					return false;
-				}
-				
-				if (!patt_password3.test(password)){
-					alert('Password requires one number at least once!');
-					return false;
-				}
-				
-				if (!patt_email.test(email)){
-					alert('Email is invalid!');
-					return false;
-				}
-			});
-		});
-	</script>
+
 </body>
 
 </html>

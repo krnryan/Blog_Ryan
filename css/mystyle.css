@@ -1,0 +1,22 @@
+#box {
+	background-color: #F7F7F7;
+	width: 500px;
+	margin: 10px auto;
+	border: 1px solid #B3B3B3;
+	border-radius: 20px;
+	padding: 20px 30px;
+	text-align: center;
+}
+
+.alert {
+	text-align: center;
+}
+		
+#message {
+	text-align: center;
+	color: red;
+}
+
+#logout {
+	cursor: pointer;
+}

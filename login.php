@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Coding &lt;span&gt; | REGISTRATION</title>
+    <title>Coding &lt;span&gt; | LOGIN</title>
 	<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/clean-blog.min.css" rel="stylesheet">
@@ -21,6 +21,7 @@
 </head>
 
 <body>
+
     <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header page-scroll">
@@ -60,52 +61,49 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="site-heading">
-                        <h1>Welcome!</h1>
+                        <h1>Welcome back!</h1>
                         <hr class="small">
-                        <span class="subheading">Sign up and get more info!</span>
+                        <span class="subheading">More info is waiting!</span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-    	<?php
-			require_once 'backend/user_functions.php';
-			
-			if(isset($_POST['user_id']) AND 
-				isset($_POST['user_password']) AND 
-				isset($_POST['user_email']))
-			{
-				$result = add_user($_POST['user_email'], $_POST['user_id'], $_POST['user_password']);
-				if($result === true) {
-					?>
-					<div class="alert alert-success" role="alert">Successfully registered!</div>
-					<?php
-				} else {
-					?>
-					<div class="alert alert-danger" role="alert">ID is already in use!</div>
-					<?php
+			<?php
+				require_once 'backend/user_functions.php';
+				
+				if(isset($_POST['user_id']) AND 
+					isset($_POST['user_password']))
+				{
+					$result = login_user($_POST['user_id'], $_POST['user_password']);
+					if(is_array($result)) {
+						header('Location: welcome.php');
+						}
+						/*?>
+						<div class="alert alert-success" role="alert">Hi, <?php echo $result['username']; ?></div>
+						<?php*/
+				else {
+						?>
+						<div class="alert alert-danger" role="alert">Please check your username / password!</div>
+						<?php
+					}
 				}
-			}
-		?>
-
-    <div class="container">
+			?>
+	<div class="container">
         <div id="box">
 			<form id="reg_form" method="POST">
 				<label for="username">Username</label>
 				<input class="form-control" type="text" name="user_id" id="username"/><br/>
 				<label for="userpw">Password</label>
 				<input class="form-control" type="password" name="user_password" id="userpw"/><br/>
-				<label for="useremail">Email</label>
-				<input class="form-control" type="text" name="user_email" id="useremail"/><br/>
-				<button class="btn btn-primary" type="submit">REGISTER</button>
+				<button class="btn btn-primary" type="submit">LOGIN</button>
 			</form><br/>
-				<button class="btn btn-primary" onclick="location.href = 'login.php'">Already signed up?</button>
+				<button class="btn btn-primary" onclick="location.href = 'registration.php'">Create new account</button>
 		</div>
     </div>
 
     <hr>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
@@ -145,46 +143,6 @@
     <script src="js/bootstrap.min.js"></script>
 
     <script src="js/clean-blog.js"></script>
-	
-	<script>
-		$(function(){
-			$('#reg_form').submit(function(){
-				var patt_username = /^[a-zA-Z0-9]{6,20}$/;
-				var patt_password = /^[a-zA-Z0-9]{6,12}$/;
-				var patt_password2 = /[A-Z]+/;
-				var patt_password3 = /[0-9]+/;
-				var patt_email = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-z]{2,4}$/;
-				var username = $('#username').val();
-				var password = $('#userpw').val();
-				var email = $('#useremail').val();
-				
-				if (!patt_username.test(username)){
-					alert('Username is invalid!');
-					return false;
-				}
-				
-				if (!patt_password.test(password)){
-					alert('Password requires min 6, max 12 length!');
-					return false;
-				}
-				
-				if (!patt_password2.test(password)){
-					alert('Password requires capitalized letter at least once!');
-					return false;
-				}
-				
-				if (!patt_password3.test(password)){
-					alert('Password requires one number at least once!');
-					return false;
-				}
-				
-				if (!patt_email.test(email)){
-					alert('Email is invalid!');
-					return false;
-				}
-			});
-		});
-	</script>
 </body>
 
 </html>

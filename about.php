@@ -1,3 +1,5 @@
+<?php require_once 'backend/user_functions.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,11 +11,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Coding &lt;span&gt; | REGISTRATION</title>
+    <title>Coding &lt;span&gt; | ABOUT</title>
 	<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/clean-blog.min.css" rel="stylesheet">
-	<link href="css/mystyle.css" rel="stylesheet">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
@@ -21,6 +22,7 @@
 </head>
 
 <body>
+
     <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header page-scroll">
@@ -35,12 +37,23 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                	<?php 
+						if ($_SESSION['user']['username'] === 'admin'){
+							echo ('<li><a href="admin/admin_index.php">Admin</a></li>');
+						}
+					?>
                     <li>
-                        <a href="login.php">Login/Sign up</a>
+						<?php
+							if(!isset($_SESSION['user'])) {
+								echo ('<a href="login.php">Login/Sign up</a>');
+							} else {
+								echo ('<a id="logout" href="logout.php">Logout</a>');
+							}
+						?>
                     </li>
                     <li>
-	                    <a href="index.php">Home</a>
-	                </li>
+                        <a href="index.php">Home</a>
+                    </li>
                     <li>
                         <a href="about.php">About me</a>
                     </li>
@@ -55,57 +68,32 @@
         </div>
     </nav>
 
-    <header class="intro-header" style="background-image: url('img/home-bg.jpg')">
+    <header class="intro-header" style="background-image: url('img/about-bg.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="site-heading">
-                        <h1>Welcome!</h1>
+                    <div class="page-heading">
+                        <h1>About Me</h1>
                         <hr class="small">
-                        <span class="subheading">Sign up and get more info!</span>
+                        <span class="subheading">This is what I do.</span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-    	<?php
-			require_once 'backend/user_functions.php';
-			
-			if(isset($_POST['user_id']) AND 
-				isset($_POST['user_password']) AND 
-				isset($_POST['user_email']))
-			{
-				$result = add_user($_POST['user_email'], $_POST['user_id'], $_POST['user_password']);
-				if($result === true) {
-					?>
-					<div class="alert alert-success" role="alert">Successfully registered!</div>
-					<?php
-				} else {
-					?>
-					<div class="alert alert-danger" role="alert">ID is already in use!</div>
-					<?php
-				}
-			}
-		?>
 
     <div class="container">
-        <div id="box">
-			<form id="reg_form" method="POST">
-				<label for="username">Username</label>
-				<input class="form-control" type="text" name="user_id" id="username"/><br/>
-				<label for="userpw">Password</label>
-				<input class="form-control" type="password" name="user_password" id="userpw"/><br/>
-				<label for="useremail">Email</label>
-				<input class="form-control" type="text" name="user_email" id="useremail"/><br/>
-				<button class="btn btn-primary" type="submit">REGISTER</button>
-			</form><br/>
-				<button class="btn btn-primary" onclick="location.href = 'login.php'">Already signed up?</button>
-		</div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe nostrum ullam eveniet pariatur voluptates odit, fuga atque ea nobis sit soluta odio, adipisci quas excepturi maxime quae totam ducimus consectetur?</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius praesentium recusandae illo eaque architecto error, repellendus iusto reprehenderit, doloribus, minus sunt. Numquam at quae voluptatum in officia voluptas voluptatibus, minus!</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum molestiae debitis nobis, quod sapiente qui voluptatum, placeat magni repudiandae accusantium fugit quas labore non rerum possimus, corrupti enim modi! Et.</p>
+            </div>
+        </div>
     </div>
 
     <hr>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
@@ -143,48 +131,9 @@
     </footer>
 
     <script src="js/bootstrap.min.js"></script>
-
+    
     <script src="js/clean-blog.js"></script>
-	
-	<script>
-		$(function(){
-			$('#reg_form').submit(function(){
-				var patt_username = /^[a-zA-Z0-9]{6,20}$/;
-				var patt_password = /^[a-zA-Z0-9]{6,12}$/;
-				var patt_password2 = /[A-Z]+/;
-				var patt_password3 = /[0-9]+/;
-				var patt_email = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-z]{2,4}$/;
-				var username = $('#username').val();
-				var password = $('#userpw').val();
-				var email = $('#useremail').val();
-				
-				if (!patt_username.test(username)){
-					alert('Username is invalid!');
-					return false;
-				}
-				
-				if (!patt_password.test(password)){
-					alert('Password requires min 6, max 12 length!');
-					return false;
-				}
-				
-				if (!patt_password2.test(password)){
-					alert('Password requires capitalized letter at least once!');
-					return false;
-				}
-				
-				if (!patt_password3.test(password)){
-					alert('Password requires one number at least once!');
-					return false;
-				}
-				
-				if (!patt_email.test(email)){
-					alert('Email is invalid!');
-					return false;
-				}
-			});
-		});
-	</script>
+
 </body>
 
 </html>

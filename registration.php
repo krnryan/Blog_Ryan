@@ -10,10 +10,13 @@
     <meta name="author" content="">
 
     <title>Coding &lt;span&gt; | REGISTRATION</title>
-	<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/clean-blog.min.css" rel="stylesheet">
 	<link href="css/mystyle.css" rel="stylesheet">
+	
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
@@ -68,25 +71,7 @@
             </div>
         </div>
     </header>
-    	<?php
-			require_once 'backend/user_functions.php';
-			
-			if(isset($_POST['user_id']) AND 
-				isset($_POST['user_password']) AND 
-				isset($_POST['user_email']))
-			{
-				$result = add_user($_POST['user_email'], $_POST['user_id'], $_POST['user_password']);
-				if($result === true) {
-					?>
-					<div class="alert alert-success" role="alert">Successfully registered!</div>
-					<?php
-				} else {
-					?>
-					<div class="alert alert-danger" role="alert">ID is already in use!</div>
-					<?php
-				}
-			}
-		?>
+    <div id="message-container" style="text-align: center;"></div>
 
     <div class="container">
         <div id="box">
@@ -142,12 +127,48 @@
         </div>
     </footer>
 
-    <script src="js/bootstrap.min.js"></script>
-
     <script src="js/clean-blog.js"></script>
 	
 	<script>
 		$(function(){
+			
+			$('#username').blur(function(){
+				var user_field = $(this);
+				var data = {
+					'user_id': $(this).val()
+				}
+				$.post('ajax/unique_check.php', data,
+					function(response){
+						if(response == 1) {
+							user_field.removeClass('alert-danger').addClass('alert-success');
+							$('#message-container').removeClass('alert alert-danger').html('');
+						} else {
+							user_field.removeClass('alert-success').addClass('alert-danger');
+							$('#message-container').addClass('alert alert-danger').html('Already in use! Please try another username!');
+						}
+					}
+				);
+			});
+			
+			$('#useremail').blur(function(){
+				var user_field = $(this);
+				var data = {
+					'user_email': $(this).val()
+				}
+				$.post('ajax/unique_check.php', data,
+					function(response){
+						if(response == 1) {
+							user_field.removeClass('alert-danger').addClass('alert-success');
+							$('#message-container').removeClass('alert alert-danger').html('');
+						} else {
+							user_field.removeClass('alert-success').addClass('alert-danger');
+							$('#message-container').addClass('alert alert-danger').html('Already in use! Please try another email!');
+							
+						}
+					}
+				);
+			});
+			
 			$('#reg_form').submit(function(){
 				var patt_username = /^[a-zA-Z0-9]{6,20}$/;
 				var patt_password = /^[a-zA-Z0-9]{6,12}$/;
@@ -182,6 +203,31 @@
 					alert('Email is invalid!');
 					return false;
 				}
+				
+				//AJAX call
+				var data = {
+					'user_id': username,
+					'user_password': password,
+					'user_email': email
+				}
+				
+				$.post('/ajax/registration.php', data, 
+					function(response){
+						if (response == 1) {
+						var div = $('<div>')
+							.addClass('alert alert-success')
+							.html('Account registration successful');
+						} else {
+							var div = $('<div>')
+							.addClass('alert alert-danger')
+							.html(response);
+						}
+						
+						$('#message-container').html(div);
+					}
+				);
+				
+				return false;
 			});
 		});
 	</script>

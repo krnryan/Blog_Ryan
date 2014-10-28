@@ -1,4 +1,7 @@
-<?php require_once 'backend/user_functions.php'; ?>
+<?php require_once 'backend/user_functions.php'; 
+	require_once 'backend/post_functions.php';
+	$posts = get_post();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -59,7 +62,7 @@
                         <a href="about.php">About me</a>
                     </li>
                     <li>
-                        <a href="post.php">Postings</a>
+                        <a href="post.php?id=<?php echo $posts[0]['post_id']; ?>">Postings</a>
                     </li>
                     <li>
                         <a href="contact.php">Contact</a>
@@ -86,51 +89,20 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            	<?php foreach($posts as $post) { ?>
                 <div class="post-preview">
-                    <a href="post.html">
+                    <a href="post.php?id=<?php echo $post['post_id']; ?>">
                         <h2 class="post-title">
-                            Man must explore, and this is exploration at its greatest
+                            <?php echo $post['title']; ?>
                         </h2>
                         <h3 class="post-subtitle">
-                            Problems look mighty small from 150 miles up
+                            <?php echo $post['subtitle']; ?>
                         </h3>
                     </a>
-                    <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on September 24, 2014</p>
+                    <p class="post-meta">Posted by <a href="#"><?php echo $post['username']; ?></a> on <?php echo date('m/d/Y', $post['created_ts']); ?></p>
                 </div>
                 <hr>
-                <div class="post-preview">
-                    <a href="post.html">
-                        <h2 class="post-title">
-                            I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.
-                        </h2>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on September 18, 2014</p>
-                </div>
-                <hr>
-                <div class="post-preview">
-                    <a href="post.html">
-                        <h2 class="post-title">
-                            Science has not yet mastered prophecy
-                        </h2>
-                        <h3 class="post-subtitle">
-                            We predict too much for the next year and yet far too little for the next ten.
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on August 24, 2014</p>
-                </div>
-                <hr>
-                <div class="post-preview">
-                    <a href="post.html">
-                        <h2 class="post-title">
-                            Failure is not an option
-                        </h2>
-                        <h3 class="post-subtitle">
-                            Many say exploration is part of our destiny, but it’s actually our duty to future generations.
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on July 8, 2014</p>
-                </div>
-                <hr>
+                <?php } ?>
                 <ul class="pager">
                     <li class="next">
                         <a href="#">Older Posts &rarr;</a>

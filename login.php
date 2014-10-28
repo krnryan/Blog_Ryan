@@ -1,3 +1,4 @@
+<?php require_once 'backend/user_functions.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,9 +38,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="login.php">Login/Sign up</a>
-                    </li>
-                    <li>
 	                    <a href="index.php">Home</a>
 	                </li>
                     <li>
@@ -69,24 +67,26 @@
             </div>
         </div>
     </header>
-			<?php
-				require_once 'backend/user_functions.php';
-				
+			<?php				
 				if(isset($_POST['user_id']) AND 
 					isset($_POST['user_password']))
 				{
 					$result = login_user($_POST['user_id'], $_POST['user_password']);
 					if(is_array($result)) {
-						header('Location: welcome.php');
+							if ($_SESSION['user']['username'] === 'admin'){
+								header('Location: /admin/admin_index.php');
+							} else {
+								header('Location: '.$_GET['url']);
+								?>
+								<div class="alert alert-success" role="alert">Successfully logged in!</div>
+								<?php
+							}
 						}
-						/*?>
-						<div class="alert alert-success" role="alert">Hi, <?php echo $result['username']; ?></div>
-						<?php*/
-				else {
-						?>
-						<div class="alert alert-danger" role="alert">Please check your username / password!</div>
-						<?php
-					}
+						else {
+							?>
+							<div class="alert alert-danger" role="alert">Please check your username / password!</div>
+							<?php
+						}
 				}
 			?>
 	<div class="container">
@@ -139,8 +139,6 @@
             </div>
         </div>
     </footer>
-
-    <script src="js/bootstrap.min.js"></script>
 
     <script src="js/clean-blog.js"></script>
 </body>

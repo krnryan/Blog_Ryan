@@ -36,7 +36,7 @@
 					<a href="about.php">About me</a>
 				</li>
 				<li>
-                    <a href="post.php">Postings</a>
+                    <a href="post.php?id=<?php echo $posts[0]['post_id']; ?>">Postings</a>
                 </li>
                 <li>
                     <a href="contact.php">Contact</a>

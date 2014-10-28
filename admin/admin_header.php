@@ -16,6 +16,11 @@
 <meta name="author" content="">
 
 <title>SB Admin - Bootstrap Admin Template</title>
+    <!-- jQuery Version 1.11.0 -->
+    <script src="js/jquery-1.11.0.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
 
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/sb-admin.css" rel="stylesheet">

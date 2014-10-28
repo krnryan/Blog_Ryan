@@ -28,7 +28,30 @@
  								<td><?php echo $user['user_id']; ?></td>
  								<td><?php echo $user['username']; ?></td>
  								<td><?php echo $user['email']; ?></td>
- 								<td><i class="fa fa-trash-o"></i>Delete | <i class="fa fa-pencil-square-o"></i>EDIT</td>
+ 								<td><a data-id="<?php echo $user['user_id']; ?>" href="#" class="fa fa-trash-o remove-post"> Delete</a> | <a href="#" class="fa fa-pencil-square-o"> EDIT</a></td>
                         	<?php } ?>
 						</table>
+
+<script>
+	$('.remove-post').click(function() {
+		var confirm_result = confirm ('Are you sure you want to delete this user?');
+		if(confirm_result) {
+			var current = $(this);
+			var data = {id: current.attr('data-id')};
+			$.post('/ajax/delete_user.php', data,
+				function(response) {
+					if (response == 1){
+					current.parent().parent().animate(
+						{
+							opacity: 0
+						}, 500, function() {
+							current.parent().parent().remove()
+						})
+					}
+				}
+			);
+		}
+	});
+</script>
+
 <?php include_once ('admin_footer.php'); ?>

@@ -1,6 +1,11 @@
 <?php require_once 'backend/user_functions.php'; 
 	require_once 'backend/post_functions.php';
-	$posts = get_post();
+	/*if(!isset($_GET['page'])){
+		header('Location: index.php?page=1');
+	}*/
+	$posts = get_post(NULL, 0, 3);
+	$post_numbers = get_post();
+	$pages = ceil(get_post_count() / 3);
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +27,14 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-
+	<style>
+		.page-navigation {
+			cursor: pointer;
+		}
+		.post-preview {
+    		text-align: center;
+    	}
+	</style>
 </head>
 
 <body>
@@ -89,20 +101,37 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            	<?php foreach($posts as $post) { ?>
-                <div class="post-preview">
-                    <a href="post.php?id=<?php echo $post['post_id']; ?>">
-                        <h2 class="post-title">
-                            <?php echo $post['title']; ?>
-                        </h2>
-                        <h3 class="post-subtitle">
-                            <?php echo $post['subtitle']; ?>
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#"><?php echo $post['username']; ?></a> on <?php echo date('m/d/Y', $post['created_ts']); ?></p>
+            	<div id="ajax-post-preview">
+	            	<?php foreach($posts as $post) { ?>
+	                <div class="post-preview">
+	                    <a href="post.php?id=<?php echo $post['post_id']; ?>">
+	                        <h2 class="post-title">
+	                            <?php echo $post['title']; ?>
+	                        </h2>
+	                        <h3 class="post-subtitle">
+	                            <?php echo $post['subtitle']; ?>
+	                        </h3>
+	                    </a>
+	                    <p class="post-meta">Posted by <a href="#"><?php echo $post['username']; ?></a> on <?php echo date('m/d/Y', $post['created_ts']); ?></p>
+	                </div>
+	                <hr>
+	                <?php } ?>
                 </div>
-                <hr>
-                <?php } ?>
+			    <div class="post-preview page-nav">
+			    	<div class="row">
+			        	<div>
+							<ul class="pagination">
+								<?php 
+								$index = 0;
+								for($i = 0; $i < $pages; $i++) { ?>
+									<li class="buttons">
+										<a data-id="<?php echo $index++; ?>" class="page-navigation"><?php echo $i+1 ?></a>
+									</li>
+								<?php } ?>
+							</ul>
+						</div>
+					</div>
+				</div>
                 <ul class="pager">
                     <li class="next">
                         <a href="#">Older Posts &rarr;</a>
@@ -149,7 +178,23 @@
             </div>
         </div>
     </footer>
-	
+	<script>
+		var first_button = $( "li.buttons" )[ 0 ];
+		$('.pagination').find(first_button).addClass('active');
+		$(function(){
+			$('.page-navigation').click(function() {
+				var current = $(this);
+				var data = {page: current.attr('data-id'), limit: 3};
+				$.post('/ajax/pagination.php', data,
+					function(response) {
+						$('#ajax-post-preview').html(response);
+						$('.buttons').removeClass('active');
+						current.parent().addClass('active');
+					}
+				);
+			});
+		});
+	</script>
     <script src="js/bootstrap.min.js"></script>
 
     <script src="js/clean-blog.js"></script>

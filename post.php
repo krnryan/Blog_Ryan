@@ -72,11 +72,11 @@
     	<div class="row">
         	<div class="page-nav">
 				<ul class="pagination">
-					<li class="disabled"><a href="#">&laquo;</a></li>
+					<!--<li class="disabled"><a href="#">&laquo;</a></li>-->
 					<?php 
 					$index = 1;
 					foreach($post_numbers as $post_num) { ?>
-					<li class="<?php if($_GET["id"] == $post_num['post_id']) {?>active<?php }; ?>"><a href="post.php?id=<?php echo $post_num['post_id']?>"><?php echo $index++; ?> <span class="sr-only">(current)</span></a></li>
+						<li class="<?php if($_GET["id"] == $post_num['post_id']) {?>active<?php }; ?>"><a href="post.php?id=<?php echo $post_num['post_id']?>"><?php echo $index++; ?> <span class="sr-only">(current)</span></a></li>
 					<?php }; ?>
 				</ul>
 			</div>
@@ -90,7 +90,7 @@
 						<li style="list-style-type: none;">
 							<p><?php echo $comment['body']; ?></p>
 							<em>By <?php echo $comment['username']; ?> on <?php echo date('F d, Y h:iA', $comment['created_ts']); ?></em><br/>
-							<a data-id="<?php echo $comment['comment_id']; ?>" class="fa fa-trash-o remove-comment"> Delete</a> | <a href="#" class="fa fa-pencil-square-o"> EDIT</a>
+							<span style="<?php if($_SESSION['user']['username'] == $comment['username']){ echo 'display: none;'; } ?>"><a data-id="<?php echo $comment['comment_id']; ?>" class="fa fa-trash-o remove-comment"> Delete</a> | <a href="#" class="fa fa-pencil-square-o"> EDIT</a></span>
 							<hr>
 						</li>
 					<?php }; ?>
@@ -163,32 +163,31 @@
 						if(response !== 0) {
 							var li = $('<li>').html(response).attr('style','list-style-type: none');
 							$('#comments-list').append(li);
-							console.log(response);
 						}
 					});
 				return false;
 			});
-		});
-		
-	$('.remove-comment').click(function() {
-		var confirm_result = confirm ('Are you sure you want to delete this comment?');
-		if(confirm_result) {
-			var current = $(this);
-			var data = {id: current.attr('data-id')};
-			$.post('/ajax/delete_comment.php', data,
-				function(response) {
-					if (response == 1){
-					current.parent().animate(
-						{
-							opacity: 0
-						}, 500, function() {
-							current.parent().remove()
-						})
-					}
+			
+			$('.remove-comment').click(function() {
+				var confirm_result = confirm ('Are you sure you want to delete this comment?');
+				if(confirm_result) {
+					var current = $(this);
+					var data = {id: current.attr('data-id')};
+					$.post('/ajax/delete_comment.php', data,
+						function(response) {
+							if (response == 1){
+							current.parent().animate(
+								{
+									opacity: 0
+								}, 500, function() {
+									current.parent().remove()
+								})
+							}
+						}
+					);
 				}
-			);
-		}
-	});
+			});
+		});
 	</script>
     <script src="js/bootstrap.min.js"></script>
 

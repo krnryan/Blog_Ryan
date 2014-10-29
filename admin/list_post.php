@@ -33,7 +33,7 @@
  								<td><?php echo $post['post_id']; ?></td>
  								<td><a href="../post.php?id=<?php echo $post['post_id']; ?>"><?php echo $post['title']; ?></a></td>
  								<td><?php echo date('Y-m-d h:ia', $post['created_ts']); ?></td>
- 								<td><a data-id="<?php echo $post['post_id']; ?>" href="#" class="fa fa-trash-o remove-post"> Delete</a> | <a href="#" class="fa fa-pencil-square-o"> EDIT</a></td>
+ 								<td><a data-id="<?php echo $post['post_id']; ?>" href="#" class="fa fa-trash-o remove-post"> Delete</a> | <a href="admin_post.php?id=<?php echo $post['post_id']; ?>" class="fa fa-pencil-square-o"> EDIT</a></td>
                         	<?php } ?>
 						</table>
 

@@ -6,9 +6,10 @@
 	} else {
 		die("No page specified!");
 	}
-	
+	$post_numbers = get_post();
 	$posts = get_post($post_id);
 
+	$comments = get_post_comments($post_id);
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +30,11 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-
+    <style>
+    	.page-nav {
+    		text-align: center;
+    	}
+    </style>
 </head>
 
 <body>
@@ -59,7 +64,43 @@
             </div>
         </div>
     </article>
-
+    <div class="container">
+    	<div class="row">
+        	<div class="page-nav">
+				<ul class="pagination">
+					<li class="disabled"><a href="#">&laquo;</a></li>
+					<?php 
+					$index = 1;
+					foreach($post_numbers as $post_num) { ?>
+					<li class="<?php if($_GET["id"] == $post_num['post_id']) {?>active<?php }; ?>"><a href="post.php?id=<?php echo $post_num['post_id']?>"><?php echo $index++; ?> <span class="sr-only">(current)</span></a></li>
+					<?php }; ?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="container" id="comments-container">
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+				<ul id="comments-list">
+					<?php foreach($comments as $comment) { ?>
+						<li style="list-style-type: none;">
+							<p><?php echo $comment['body']; ?></p>
+							<em>By <?php echo $comment['username']; ?> on <?php echo date('F d, Y h:iA', $comment['created_ts']); ?></em>
+						</li><hr>
+					<?php }; ?>
+				</ul>
+				<div id="comment-form-container">
+			        <form role="form" id="comment-form">
+			        	<div class="form-group">
+			        		<label for="comment">Comment</label>
+			        		<textarea class="form-control" id="comment" placeholder="Comment"></textarea>
+			        	</div>
+			        	<button type="submit" class="btn btn-default">Submit</button>
+			        </form>
+			    </div>
+    		</div>
+		</div>
+	</div>
     <hr>
 
     <footer>
@@ -97,7 +138,34 @@
             </div>
         </div>
     </footer>
-
+	<script>
+		var post_id = <?php echo $_GET['id']; ?>;
+		var user_id = <?php echo $_SESSION['user']['user_id']; ?>;
+		var comment;
+		$(function(){
+			$('#comment-form').submit(function(){
+				comment = $('#comment').val();
+				
+				var data = {
+					'post_id': post_id,
+					'user_id': user_id,
+					'comment': comment
+				};
+				
+				var line = $('<hr>');
+				
+				$.post('ajax/add_comment.php', data,
+					function(response){
+						if(response !== 0) {
+							var li = $('<li>').html(response).attr('style','list-style-type: none').append(line);
+							$('#comments-list').append(li);
+							console.log(response);
+						}
+					});
+				return false;
+			});
+		});
+	</script>
     <script src="js/bootstrap.min.js"></script>
 
     <script src="js/clean-blog.js"></script>

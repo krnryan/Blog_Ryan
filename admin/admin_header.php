@@ -84,9 +84,6 @@
                 <a href="users.php"><i class="fa fa-user"></i> Users</a>
             </li>
             <li>
-                <a href="blank-page.php"><i class="fa fa-file"></i> Blank Page</a>
-            </li>
-            <li>
                 <a href="../index.php"><i class="fa fa-file"></i> Back to blog</a>
             </li>
         </ul>

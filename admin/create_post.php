@@ -41,38 +41,7 @@
                                 <i class="fa fa-file"></i> Create post
                             </li>
                         </ol>
-						<form class="form-horizontal" role="form" method="POST" enctype="multipart/form-data">
-							<div class="form-group">
-							<label for="new_title" class="col-sm-2 control-label">Title</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control" id="new_title" name="title">
-								</div>
-							</div>
-							<div class="form-group">
-							<label for="new_subtitle" class="col-sm-2 control-label">Subtitle</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control" id="new_subtitle" name="subtitle">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="new_content" class="col-sm-2 control-label">Content</label>
-								<div class="col-sm-10">
-									<textarea class="form-control" id="new_content" rows="10" name="content"></textarea>
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-sm-offset-2 col-sm-10">
-									<label for="pic_attachment">Picture attachment</label>
-									<input type="file" id="pic_attachment" name="picture">
-									<p class="pic_help">JPEG file only (maximum 1Mb)</p>
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-sm-offset-2 col-sm-10">
-									<button type="submit" class="btn btn-default">Create</button>
-								</div>
-							</div>
-						</form>
+						<?php include_once 'inc/post_form.php'; ?>
         <script>
             CKEDITOR.replace( 'content' );
         </script>

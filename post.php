@@ -34,6 +34,10 @@
     	.page-nav {
     		text-align: center;
     	}
+    	
+    	.remove-comment {
+    		cursor: pointer;
+    	}
     </style>
 </head>
 
@@ -85,8 +89,10 @@
 					<?php foreach($comments as $comment) { ?>
 						<li style="list-style-type: none;">
 							<p><?php echo $comment['body']; ?></p>
-							<em>By <?php echo $comment['username']; ?> on <?php echo date('F d, Y h:iA', $comment['created_ts']); ?></em>
-						</li><hr>
+							<em>By <?php echo $comment['username']; ?> on <?php echo date('F d, Y h:iA', $comment['created_ts']); ?></em><br/>
+							<a data-id="<?php echo $comment['comment_id']; ?>" class="fa fa-trash-o remove-comment"> Delete</a> | <a href="#" class="fa fa-pencil-square-o"> EDIT</a>
+							<hr>
+						</li>
 					<?php }; ?>
 				</ul>
 				<div id="comment-form-container">
@@ -152,12 +158,10 @@
 					'comment': comment
 				};
 				
-				var line = $('<hr>');
-				
 				$.post('ajax/add_comment.php', data,
 					function(response){
 						if(response !== 0) {
-							var li = $('<li>').html(response).attr('style','list-style-type: none').append(line);
+							var li = $('<li>').html(response).attr('style','list-style-type: none');
 							$('#comments-list').append(li);
 							console.log(response);
 						}
@@ -165,6 +169,26 @@
 				return false;
 			});
 		});
+		
+	$('.remove-comment').click(function() {
+		var confirm_result = confirm ('Are you sure you want to delete this comment?');
+		if(confirm_result) {
+			var current = $(this);
+			var data = {id: current.attr('data-id')};
+			$.post('/ajax/delete_comment.php', data,
+				function(response) {
+					if (response == 1){
+					current.parent().animate(
+						{
+							opacity: 0
+						}, 500, function() {
+							current.parent().remove()
+						})
+					}
+				}
+			);
+		}
+	});
 	</script>
     <script src="js/bootstrap.min.js"></script>
 

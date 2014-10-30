@@ -45,7 +45,7 @@
 
     <?php require_once ('header.php'); ?>
 	<?php foreach($posts as $post) { ?>
-    <header class="intro-header" style="background-image: url('img/<?php echo $post['picture']; ?>')">
+    <header class="intro-header" style="background-image: url('img/headers/<?php echo $post['picture']; ?>')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -90,7 +90,7 @@
 						<li style="list-style-type: none;">
 							<p><?php echo $comment['body']; ?></p>
 							<em>By <?php echo $comment['username']; ?> on <?php echo date('F d, Y h:iA', $comment['created_ts']); ?></em><br/>
-							<span style="<?php if($_SESSION['user']['username'] == $comment['username']){ echo 'display: none;'; } ?>"><a data-id="<?php echo $comment['comment_id']; ?>" class="fa fa-trash-o remove-comment"> Delete</a> | <a href="#" class="fa fa-pencil-square-o"> EDIT</a></span>
+							<span style="<?php if($_SESSION['user']['username'] !== $comment['username'] AND $_SESSION['user']['username'] !== 'admin'){ echo 'display: none;'; } ?>"><a data-id="<?php echo $comment['comment_id']; ?>" class="fa fa-trash-o remove-comment"> Delete</a> | <a href="#" class="fa fa-pencil-square-o"> EDIT</a></span>
 							<hr>
 						</li>
 					<?php }; ?>

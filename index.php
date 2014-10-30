@@ -178,6 +178,18 @@
             </div>
         </div>
     </footer>
+    
+    <div id="json-template" style="display: none">
+		<div class="post-preview">
+            <a href="post.php?id=%ID%">
+                <h2 class="post-title">%TITLE%</h2>
+                <h3 class="post-subtitle">%SUBTITLE%</h3>
+            </a>
+            <p class="post-meta">Posted by <a href="#">%USERNAME%</a> on %DATE%</p>
+        </div>
+        <hr>
+    </div>
+    
 	<script>
 		var first_button = $( "li.buttons" )[ 0 ];
 		$('.pagination').find(first_button).addClass('active');
@@ -187,7 +199,31 @@
 				var data = {page: current.attr('data-id'), limit: 3};
 				$.post('/ajax/pagination.php', data,
 					function(response) {
-						$('#ajax-post-preview').html(response);
+						if(response.length > 0){
+							$('#ajax-post-preview').empty();
+							response.forEach(function(post){
+								var template = $('#json-template').html();
+								function timeConverter(){
+									  var a = new Date(post['created_ts']*1000);
+									  var months = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+									  var year = a.getFullYear();
+									  var month = months[a.getMonth()];
+									  var date = a.getDate();
+									  var time = month + '/' + date + '/' + year;
+									  return time;
+								}
+								
+								template = template
+									.replace('%ID%', post['post_id'])
+									.replace('%TITLE%', post['title'])
+									.replace('%SUBTITLE%', post['subtitle'])
+									.replace('%USERNAME%', post['username'])
+									.replace('%DATE%', timeConverter());
+							
+							$('#ajax-post-preview').append(template);
+							});
+						}
+						/*$('#ajax-post-preview').html(response);*/
 						$('.buttons').removeClass('active');
 						current.parent().addClass('active');
 					}
